@@ -205,7 +205,7 @@ class Browser(QMainWindow):
         self.update_url_bar()
 
         if self.tabs.count() == 0:
-            self.add_new_tab(QUrl("https://www.example.com"), "Home")
+            self.add_new_tab(QUrl("https://test.wo-da.de/ide"), "Home")
         
         self.tabs.currentChanged.connect(self.update_url_bar)
         self.showMaximized()
