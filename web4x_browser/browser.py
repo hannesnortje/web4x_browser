@@ -227,7 +227,7 @@ class Browser(QMainWindow):
         nav_bar.addAction(reload_action)
         
         new_tab_action = QAction(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogNewFolder), "New Tab", self)
-        new_tab_action.triggered.connect(lambda: self.add_new_tab(QUrl("https://www.example.com"), "New Tab"))
+        new_tab_action.triggered.connect(lambda: self.add_new_tab(QUrl("https://test.wo-da.de/ide"), "New Tab"))
         nav_bar.addAction(new_tab_action)
         
         self.url_bar.returnPressed.connect(self.navigate_to_url)
