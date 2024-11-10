@@ -210,6 +210,13 @@ class Browser(QMainWindow):
         self.tabs.currentChanged.connect(self.update_url_bar)
         self.showMaximized()
 
+        self.code_executor.codeResultReady.connect(self.open_new_tab)
+
+    @pyqtSlot(QVariant)
+    def open_new_tab(self, url):
+        """Opens a new tab with the given URL."""
+        self.add_new_tab(QUrl(url), "New Tab")
+
     def setup_navigation(self):
         nav_bar = QToolBar()
         self.addToolBar(nav_bar)
@@ -468,6 +475,7 @@ class Browser(QMainWindow):
         script = """
             debugger;
             document.addEventListener("DOMContentLoaded", function() {
+                // Existing drag-and-drop functionality
                 document.body.addEventListener("dragover", function(e) {
                     e.preventDefault();
                 });
@@ -490,6 +498,16 @@ class Browser(QMainWindow):
                         }
                     } else {
                         console.log("No recognizable data in drop.");
+                    }
+                });
+
+                // New link-click handling to open in a new tab only for target="_blank" links
+                document.body.addEventListener("click", function(e) {
+                    const link = e.target.closest("a[target='_blank']");
+                    if (link) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.codeExecutor.executeSignal(link.href);  // Send the link URL to PyQt
                     }
                 });
             });
