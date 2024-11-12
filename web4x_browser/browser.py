@@ -329,32 +329,50 @@ class Browser(QMainWindow):
 
     def open_context_menu(self, position):
         menu = QMenu()
-        
+
+        # Existing context menu options
         copy_action = QAction("Copy", self)
         copy_action.triggered.connect(lambda: self.execute_javascript("document.execCommand('copy');"))
         menu.addAction(copy_action)
-        
+
         cut_action = QAction("Cut", self)
         cut_action.triggered.connect(lambda: self.execute_javascript("document.execCommand('cut');"))
         menu.addAction(cut_action)
-        
+
         paste_action = QAction("Paste", self)
         paste_action.triggered.connect(lambda: self.execute_javascript("document.execCommand('paste');"))
         menu.addAction(paste_action)
-        
+
         save_action = QAction("Save As...", self)
         save_action.triggered.connect(self.save_as)
         menu.addAction(save_action)
-        
+
         print_action = QAction("Print...", self)
         print_action.triggered.connect(self.print_page)
         menu.addAction(print_action)
-        
+
+        # New "Open in New Tab" action
+        open_in_new_tab_action = QAction("Open Link in New Tab", self)
+        open_in_new_tab_action.triggered.connect(lambda: self.open_link_in_new_tab())
+        menu.addAction(open_in_new_tab_action)
+
         inspect_action = QAction("Inspect Element", self)
         inspect_action.triggered.connect(self.open_dev_tools)
         menu.addAction(inspect_action)
-        
+
         menu.exec(QCursor.pos())
+
+    def open_link_in_new_tab(self):
+        # This JavaScript will capture the link under the context menu
+        script = """
+            var element = document.activeElement;
+            if (element && element.href) {
+                element.href;
+            } else {
+                null;
+            }
+        """
+        self.current_browser().page().runJavaScript(script, self.open_new_tab)
 
     def execute_javascript(self, script):
         browser = self.current_browser()
